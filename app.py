@@ -108,13 +108,13 @@ with col2:
         <svg width="100%" height="650" viewBox="0 0 500 650">
             <rect x="10" y="10" width="480" height="500" fill="none" stroke="#ccc" />
             
-            <line x1="60" y1="30" x2="440" y2="30" stroke="#4A90E2" stroke-width="3" />
-            <line x1="60" y1="170" x2="440" y2="170" stroke="#4A90E2" stroke-width="3" />
-            <line x1="60" y1="310" x2="440" y2="310" stroke="#4A90E2" stroke-width="3" />
+            <line x1="60" y1="25" x2="440" y2="25" stroke="#4A90E2" stroke-width="3" />
+            <line x1="60" y1="165" x2="440" y2="165" stroke="#4A90E2" stroke-width="3" />
+            <line x1="60" y1="305" x2="440" y2="305" stroke="#4A90E2" stroke-width="3" />
 
-            line x1="60" y1="40" x2="440" y2="40" stroke="#FF5252" stroke-width="3" />
-            <line x1="60" y1="180" x2="440" y2="180" stroke="#FF5252" stroke-width="3" />
-            <line x1="60" y1="320" x2="440" y2="320" stroke="#FF5252" stroke-width="3" />
+            line x1="60" y1="45" x2="440" y2="45" stroke="#FF5252" stroke-width="3" />
+            <line x1="60" y1="185" x2="440" y2="185" stroke="#FF5252" stroke-width="3" />
+            <line x1="60" y1="325" x2="440" y2="325" stroke="#FF5252" stroke-width="3" />
 
             <line x1="200" y1="50" x2="200" y2="510" stroke="#FF5252" stroke-width="3" />
             <line x1="300" y1="50" x2="300" y2="510" stroke="#4A90E2" stroke-width="3" />
