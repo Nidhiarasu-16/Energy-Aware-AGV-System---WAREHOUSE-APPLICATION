@@ -112,9 +112,9 @@ with col2:
             <line x1="60" y1="210" x2="440" y2="210" stroke="#4A90E2" stroke-width="3" />
             <line x1="60" y1="350" x2="440" y2="350" stroke="#4A90E2" stroke-width="3" />
 
-            line x1="60" y1="60" x2="440" y2="60" stroke="#FF5252" stroke-width="3" />
-            <line x1="60" y1="200" x2="440" y2="200" stroke="#FF5252" stroke-width="3" />
-            <line x1="60" y1="340" x2="440" y2="340" stroke="#FF5252" stroke-width="3" />
+            line x1="60" y1="80" x2="440" y2="80" stroke="#FF5252" stroke-width="3" />
+            <line x1="60" y1="220" x2="440" y2="220" stroke="#FF5252" stroke-width="3" />
+            <line x1="60" y1="360" x2="440" y2="360" stroke="#FF5252" stroke-width="3" />
 
             <line x1="200" y1="50" x2="200" y2="510" stroke="#FF5252" stroke-width="3" />
             <line x1="300" y1="50" x2="300" y2="510" stroke="#4A90E2" stroke-width="3" />
