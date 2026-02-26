@@ -30,7 +30,7 @@ if 's_y' not in st.session_state:
 if 'is_moving' not in st.session_state:
     st.session_state.is_moving = False
 
-# Vertical coordinates for the racks
+# Mapping Rack names to specific Y-coordinates
 RACK_COORDINATES = {
     "L3": 90, "R3": 90,
     "L2": 220, "R2": 220,
@@ -65,11 +65,12 @@ with col1:
     </div>
     """, unsafe_allow_html=True)
 
-# Create a placeholder in col2 for the SVG to prevent the app from jumping
+# Placeholder for the Map in col2
 with col2:
-    map_placeholder = st.empty()
+    map_container = st.empty()
 
 def render_map():
+    # SVG construction with extended paths and correct layering
     svg_html = f"""
     <div style="display: flex; justify-content: center;">
         <svg width="500" height="630" viewBox="0 0 500 630" xmlns="http://www.w3.org/2000/svg" style="background: white; border: 1px solid #ccc;">
@@ -104,31 +105,32 @@ def render_map():
         </svg>
     </div>
     """
-    map_placeholder.html(svg_html, height=640)
+    # Fix: Use with map_container to call the component
+    with map_container:
+        components.html(svg_html, height=640)
 
 # Initial render
 render_map()
 
-# --- Motion Logic ---
+# --- Mission Animation Logic ---
 if start_btn and not st.session_state.is_moving:
     st.session_state.is_moving = True
     target_y = RACK_COORDINATES[rack]
     is_slave = rack.startswith("L")
     
-    # 1. TRAVEL TO RACK (UP)
-    # Using a while loop with small steps for medium speed animation
+    # Move to Rack
     while (st.session_state.s_y if is_slave else st.session_state.m_y) > target_y:
         if is_slave:
             st.session_state.s_y -= 5
         else:
             st.session_state.m_y -= 5
         render_map()
-        time.sleep(0.02) # Adjusted for smoother "Medium" speed
+        time.sleep(0.02)
 
-    # 2. WAIT AT RACK
+    # Pause at Rack for 3 seconds
     time.sleep(3)
 
-    # 3. RETURN TO DOCK (DOWN)
+    # Return to Dock
     while (st.session_state.s_y if is_slave else st.session_state.m_y) < 450:
         if is_slave:
             st.session_state.s_y += 5
