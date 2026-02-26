@@ -2,161 +2,140 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 # --- Page Config ---
-st.set_page_config(page_title="AGV Intelligent Control", layout="wide")
+st.set_page_config(page_title="Intelligent AGV Control", layout="wide")
 
-# --- Aesthetic Glassmorphism CSS ---
+# --- CSS: Large Text, Big Energy Bars, and Dark Aesthetics ---
 st.markdown("""
     <style>
-    .stApp { background: linear-gradient(135deg, #060d17 0%, #0f172a 100%); }
+    .stApp { background: #060d17; }
     
-    .control-card {
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(15px);
-        border-radius: 24px;
-        padding: 30px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-    }
+    /* 1. HUGE DROPDOWNS & TEXT */
+    .stSelectbox label p { font-size: 28px !important; font-weight: bold !important; color: #cbd5e1 !important; }
+    div[data-baseweb="select"] > div { font-size: 24px !important; height: 65px !important; background: rgba(255,255,255,0.05) !important; color: white !important; }
+    
+    /* 2. LARGE GAUGE-STYLE ENERGY BARS */
+    .energy-card { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
+    .energy-label { font-size: 22px; font-weight: bold; color: #94a3b8; margin-bottom: 10px; display: block; }
+    .bar-bg { width: 100%; background: #1e293b; height: 35px; border-radius: 8px; overflow: hidden; position: relative; border: 1px solid #334155; }
+    .bar-fill { height: 100%; display: flex; align-items: center; justify-content: flex-end; padding-right: 15px; color: white; font-weight: bold; font-size: 18px; transition: width 1s; }
 
-    .energy-header { color: #94a3b8; font-size: 13px; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 5px; }
-    .energy-bar-bg { width: 100%; background: rgba(255,255,255,0.05); height: 10px; border-radius: 5px; margin-bottom: 20px; }
-    .energy-bar-fill { height: 100%; border-radius: 5px; transition: width 1s ease; }
+    /* 3. EXECUTE BUTTON */
+    button[kind="primary"] { height: 80px !important; font-size: 26px !important; font-weight: bold !important; background: linear-gradient(90deg, #38bdf8, #818cf8) !important; border: none !important; border-radius: 15px !important; margin-top: 20px !important; }
 
-    .stSelectbox label p { color: #cbd5e1 !important; font-size: 16px !important; }
-    div[data-baseweb="select"] { background-color: rgba(255,255,255,0.02) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important; }
-
-    button[kind="primary"] {
-        background: linear-gradient(90deg, #38bdf8, #818cf8) !important;
-        border: none !important; height: 55px !important; border-radius: 12px !important;
-        font-weight: bold !important; font-size: 18px !important;
-        box-shadow: 0 0 20px rgba(56, 189, 248, 0.2) !important;
-    }
-
-    .status-alert {
-        padding: 15px; border-radius: 12px; border-left: 4px solid #38bdf8;
-        background: rgba(56, 189, 248, 0.05); color: white; margin-top: 20px;
-    }
+    /* 4. STATUS BOX */
+    .status-box { background: rgba(34, 197, 94, 0.1); border-left: 6px solid #22c55e; padding: 25px; border-radius: 12px; color: white; font-size: 22px; margin-top: 30px; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- Logic: Automated Unit Selection ---
-master_charge = 28
-slave_charge = 76
+# --- Intelligence Logic ---
+m_charge = 28
+s_charge = 76
 
-# The logic: Identify which unit has higher energy
-if master_charge >= slave_charge:
-    selected_unit = "M"
-    active_color = "#38bdf8"
-    active_name = "Master Unit"
-    current_charge = master_charge
+# Auto-select the hero of the mission
+if s_charge >= m_charge:
+    active_id, active_color, active_label = "slave_agv", "#fb7185", "Slave Unit (S)"
+    start_x = 200
 else:
-    selected_unit = "S"
-    active_color = "#fb7185"
-    active_name = "Slave Unit"
-    current_charge = slave_charge
+    active_id, active_color, active_label = "master_agv", "#38bdf8", "Master Unit (M)"
+    start_x = 300
 
-# --- State ---
-if 'mission_trigger' not in st.session_state:
-    st.session_state.mission_trigger = False
-
-# Path coordinates (Aisle Y, Final X)
-RACK_PATHS = {
+RACK_MAP = {
     "L3": {"y": 90, "x": 110}, "R3": {"y": 90, "x": 395},
     "L2": {"y": 220, "x": 110}, "R2": {"y": 220, "x": 395},
     "L1": {"y": 350, "x": 110}, "R1": {"y": 350, "x": 395}
 }
 
+# --- Layout ---
 col1, col2 = st.columns([1, 1.4], gap="large")
 
 with col1:
-    st.markdown('<h2 style="color:white;">Mission <span style="color:#38bdf8;">Plan</span></h2>', unsafe_allow_html=True)
+    st.markdown('<h1 style="color:white; font-size: 42px;">System <span style="color:#38bdf8;">OS</span></h1>', unsafe_allow_html=True)
     
-    with st.container():
-        st.markdown('<div class="control-card">', unsafe_allow_html=True)
-        st.markdown(f'<div class="energy-header">Master Energy: {master_charge}%</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="energy-bar-bg"><div class="energy-bar-fill" style="width: {master_charge}%; background: #38bdf8;"></div></div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="energy-header">Slave Energy: {slave_charge}%</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="energy-bar-bg"><div class="energy-bar-fill" style="width: {slave_charge}%; background: #fb7185;"></div></div>', unsafe_allow_html=True)
-        
-        rack_choice = st.selectbox("Destination Rack", list(RACK_PATHS.keys()), index=1)
-        st.selectbox("Item Details", ["Bearing 10cm", "Gear 15cm", "Shaft 5cm"])
-        
-        if st.button("DISPATCH AGV", type="primary", use_container_width=True):
-            st.session_state.mission_trigger = True
-        st.markdown('</div>', unsafe_allow_html=True)
+    # Energy Section
+    st.markdown(f'''<div class="energy-card">
+        <span class="energy-label">Master Energy</span>
+        <div class="bar-bg"><div class="bar-fill" style="width: 28%; background: #38bdf8;">28%</div></div>
+        <span class="energy-label">Slave Energy</span>
+        <div class="bar-bg"><div class="bar-fill" style="width: 76%; background: #fb7185;">76%</div></div>
+    </div>''', unsafe_allow_html=True)
+    
+    # Dropdowns
+    rack_sel = st.selectbox("Target Rack Location", list(RACK_MAP.keys()), index=4)
+    item_sel = st.selectbox("Inventory Item Selection", ["Bearing 10cm", "Gear 15cm", "Shaft 5cm"])
+    
+    # Trigger
+    do_dispatch = st.button("EXECUTE MISSION", type="primary", use_container_width=True)
 
-    st.markdown(f"""<div class="status-alert">
-        <b>Intelligence System:</b> {active_name} selected for mission (Higher Charge: {current_charge}%)
+    st.markdown(f"""<div class="status-box">
+        <b>MISSION CONTROL</b><br>
+        Unit: {active_label}<br>
+        Status: {"Dispatched" if do_dispatch else "Standby"}
     </div>""", unsafe_allow_html=True)
 
 with col2:
-    # Get target coordinates
-    path = RACK_PATHS[rack_choice]
-    # Calculate offsets relative to starting positions
-    # S starts at x:200, y:450 | M starts at x:300, y:450
-    start_x = 200 if selected_unit == "S" else 300
-    target_dx = path['x'] - start_x
-    target_dy = path['y'] - 450
+    coords = RACK_MAP[rack_sel]
+    dy = coords['y'] - 450
+    dx = coords['x'] - start_x
     
-    svg_id = "slave_agv" if selected_unit == "S" else "master_agv"
+    # Javascript trigger logic
+    run_js = "true" if do_dispatch else "false"
 
-    html_map = f"""
+    svg_html = f"""
     <div style="background: rgba(255,255,255,0.02); border-radius: 30px; padding: 20px; border: 1px solid rgba(255,255,255,0.05);">
         <svg width="100%" height="650" viewBox="0 0 500 630">
-            <defs>
-                <filter id="glow"><feGaussianBlur stdDeviation="2.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-            </defs>
+            <defs><filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
             
             <g stroke="white" stroke-width="1" opacity="0.05">
                 <line x1="50" y1="90" x2="450" y2="90" /><line x1="50" y1="220" x2="450" y2="220" /><line x1="50" y1="350" x2="450" y2="350" />
                 <line x1="200" y1="50" x2="200" y2="520" /><line x1="300" y1="50" x2="300" y2="520" />
             </g>
 
-            <g fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)">
-                <rect x="70" y="70" width="70" height="40" rx="8" /><text x="92" y="95" fill="#64748b" font-size="12">L3</text>
-                <rect x="360" y="70" width="70" height="40" rx="8" /><text x="382" y="95" fill="#64748b" font-size="12">R3</text>
-                <rect x="70" y="200" width="70" height="40" rx="8" /><text x="92" y="225" fill="#64748b" font-size="12">L2</text>
-                <rect x="360" y="200" width="70" height="40" rx="8" /><text x="382" y="225" fill="#64748b" font-size="12">R2</text>
-                <rect x="70" y="330" width="70" height="40" rx="8" /><text x="92" y="355" fill="#64748b" font-size="12">L1</text>
-                <rect x="360" y="330" width="70" height="40" rx="8" /><text x="382" y="355" fill="#64748b" font-size="12">R1</text>
+            <g fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)">
+                {" ".join([f'<rect x="{70 if k[0]=="L" else 360}" y="{v["y"]-20}" width="70" height="40" rx="5" />' for k,v in RACK_MAP.items()])}
+                {" ".join([f'<text x="{"92" if k[0]=="L" else "382"}" y="{v["y"]+5}" fill="white" font-size="14">{k}</text>' for k,v in RACK_MAP.items()])}
             </g>
 
-            <g id="slave_agv" style="transition: transform 1.5s ease-in-out;">
+            <g id="slave_agv" style="transition: transform 1.2s ease-in-out;">
                 <rect x="180" y="450" width="40" height="60" rx="10" fill="#fb7185" filter="url(#glow)" />
-                <text x="194" y="485" fill="white" font-weight="bold">S</text>
+                <text x="194" y="488" fill="white" font-weight="bold">S</text>
             </g>
-            <g id="master_agv" style="transition: transform 1.5s ease-in-out;">
+            <g id="master_agv" style="transition: transform 1.2s ease-in-out;">
                 <rect x="280" y="450" width="40" height="60" rx="10" fill="#38bdf8" filter="url(#glow)" />
-                <text x="294" y="485" fill="white" font-weight="bold">M</text>
+                <text x="294" y="488" fill="white" font-weight="bold">M</text>
             </g>
+            
+            <rect x="175" y="540" width="150" height="60" rx="15" fill="rgba(255,255,255,0.05)" />
+            <text x="200" y="575" fill="#94a3b8" font-size="10" font-weight="bold">CHARGING BASE</text>
         </svg>
 
         <script>
-            if ({str(st.session_state.mission_trigger).lower()}) {{
-                const agv = document.getElementById("{svg_id}");
+            if ({run_js}) {{
+                const unit = document.getElementById("{active_id}");
                 
-                // Step-by-Step Multi-Axis Animation
-                // 1. Move Vertically to Aisle
-                agv.style.transform = "translateY({target_dy}px)";
-                
-                // 2. Turn & Move Horizontally to Rack
-                setTimeout(() => {{
-                    agv.style.transform = "translateY({target_dy}px) translateX({target_dx}px)";
-                }}, 1600);
-                
-                // 3. Wait 2s at Rack, then Return Horizontally
-                setTimeout(() => {{
-                    agv.style.transform = "translateY({target_dy}px) translateX(0px)";
-                }}, 5000);
-                
-                // 4. Return Vertically to Dock
-                setTimeout(() => {{
-                    agv.style.transform = "translateY(0px) translateX(0px)";
-                }}, 6600);
+                // Force sync with the browser's refresh cycle to ensure outbound animation plays
+                requestAnimationFrame(() => {{
+                    requestAnimationFrame(() => {{
+                        // 1. Outbound Vertical
+                        unit.style.transform = "translateY({dy}px)";
+                        
+                        // 2. Outbound Horizontal (after vertical finishes)
+                        setTimeout(() => {{
+                            unit.style.transform = "translateY({dy}px) translateX({dx}px)";
+                        }}, 1300);
+                        
+                        // 3. Return Horizontal (after 3s wait)
+                        setTimeout(() => {{
+                            unit.style.transform = "translateY({dy}px) translateX(0px)";
+                        }}, 5000);
+                        
+                        // 4. Return Vertical (Home)
+                        setTimeout(() => {{
+                            unit.style.transform = "translateY(0px) translateX(0px)";
+                        }}, 6300);
+                    }});
+                }});
             }}
         </script>
     </div>
     """
-    components.html(html_map, height=670)
-
-if st.session_state.mission_trigger:
-    st.session_state.mission_trigger = False
+    components.html(svg_html, height=670)
