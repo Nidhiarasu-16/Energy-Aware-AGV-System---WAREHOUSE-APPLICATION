@@ -108,9 +108,9 @@ with col2:
         <svg width="100%" height="650" viewBox="0 0 500 650">
             <rect x="10" y="10" width="480" height="500" fill="none" stroke="#ccc" />
             
-            <line x1="60" y1="25" x2="440" y2="25" stroke="#4A90E2" stroke-width="3" />
-            <line x1="60" y1="165" x2="440" y2="165" stroke="#4A90E2" stroke-width="3" />
             
+            <line x1="60" y1="165" x2="440" y2="165" stroke="#4A90E2" stroke-width="3" />
+            <line x1="60" y1="305" x2="440" y2="305" stroke="#4A90E2" stroke-width="3" />
 
             line x1="60" y1="45" x2="440" y2="45" stroke="#FF5252" stroke-width="3" />
             <line x1="60" y1="185" x2="440" y2="185" stroke="#FF5252" stroke-width="3" />
