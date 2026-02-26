@@ -51,7 +51,7 @@ with col1:
     ''', unsafe_allow_html=True)
 
     rack_choice = st.selectbox("Product Rack", list(PATH_MAP.keys()), index=2)
-    st.selectbox("Product Name", ["Bearing 5cm", "Gear 10cm", "Shaft 15cm"])
+    st.selectbox("Product Name", ["Bearing 5cm","Bearing 10cm","Bearing 15cm", "Gear 5cm","Gear 10cm","Gear 15cm", "Shaft 5cm","Shaft 10cm","Shaft 15cm"])
     
     if st.button("EXECUTE MISSION", type="primary", use_container_width=True):
         st.session_state.execute_nav = True
