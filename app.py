@@ -80,7 +80,7 @@ with col1:
     ''', unsafe_allow_html=True)
 
     rack_choice = st.selectbox("Product Rack", list(RACKS.keys()), index=3) # Default R2
-    product_choice = st.selectbox("Product Name", ["Bearing 10cm", "Gear 15cm", "Shaft 5cm"])
+    product_choice = st.selectbox("Product Name", ["Bearing 5cm","Bearing 10cm","Bearing 15cm", "Gear 5cm","Gear 10cm","Gear 15cm", "Shaft 5cm","Shaft 10cm","Shaft 15cm",])
     
     if st.button("EXECUTE MISSION", type="primary", use_container_width=True):
         st.session_state.execute_nav = True
@@ -108,9 +108,13 @@ with col2:
         <svg width="100%" height="650" viewBox="0 0 500 650">
             <rect x="10" y="10" width="480" height="500" fill="none" stroke="#ccc" />
             
-            <line x1="80" y1="100" x2="420" y2="100" stroke="#ccc" stroke-width="2" />
-            <line x1="80" y1="240" x2="420" y2="240" stroke="#ccc" stroke-width="2" />
-            <line x1="80" y1="380" x2="420" y2="380" stroke="#ccc" stroke-width="2" />
+            <line x1="60" y1="70" x2="440" y2="70" stroke="#4A90E2" stroke-width="3" />
+            <line x1="60" y1="210" x2="440" y2="210" stroke="#4A90E2" stroke-width="3" />
+            <line x1="60" y1="350" x2="440" y2="350" stroke="#4A90E2" stroke-width="3" />
+
+            line x1="60" y1="60" x2="440" y2="60" stroke="#FF5252" stroke-width="3" />
+            <line x1="60" y1="200" x2="440" y2="200" stroke="#FF5252" stroke-width="3" />
+            <line x1="60" y1="340" x2="440" y2="340" stroke="#FF5252" stroke-width="3" />
 
             <line x1="200" y1="50" x2="200" y2="510" stroke="#FF5252" stroke-width="3" />
             <line x1="300" y1="50" x2="300" y2="510" stroke="#4A90E2" stroke-width="3" />
