@@ -92,7 +92,7 @@ with col2:
             <line x1="60" y1="165" x2="440" y2="165" stroke="#4A90E2" stroke-width="3" />
             <line x1="60" y1="305" x2="440" y2="305" stroke="#4A90E2" stroke-width="3" />
 
-            <line x1="60" y1="45" x2="440" y2="45" stroke="#FF5252" stroke-width="3" />
+           
             <line x1="60" y1="185" x2="440" y2="185" stroke="#FF5252" stroke-width="3" />
             <line x1="60" y1="325" x2="440" y2="325" stroke="#FF5252" stroke-width="3" />
 
