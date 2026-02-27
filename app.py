@@ -21,7 +21,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # --- Logic: Charge-Based Selection ---
-m_charge, s_charge = 28, 76
+m_charge, s_charge = 54, 35
 if s_charge >= m_charge:
     active_id, unit_label, start_x = "slave_agv", "Slave", 200
 else:
