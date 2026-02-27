@@ -43,10 +43,10 @@ col1, col2 = st.columns([1, 1.2], gap="large")
 with col1:
     st.markdown(f'''
     <div class="energy-container"><span class="energy-label" style="color:#4A90E2;">Master</span>
-        <div style="display:flex; align-items:center;"><div class="bar-outline"><div class="bar-fill" style="width:28%; background:#4A90E2;"></div></div><span class="percent-text">28%</span></div>
+        <div style="display:flex; align-items:center;"><div class="bar-outline"><div class="bar-fill" style="width:{m_change}%; background:#4A90E2;"></div></div><span class="percent-text">28%</span></div>
     </div>
     <div class="energy-container"><span class="energy-label" style="color:#FF5252;">Slave</span>
-        <div style="display:flex; align-items:center;"><div class="bar-outline" style="border-color:#FF5252;"><div class="bar-fill" style="width:76%; background:#FF5252;"></div></div><span class="percent-text" style="color:#FF5252;">76%</span></div>
+        <div style="display:flex; align-items:center;"><div class="bar-outline" style="border-color:#FF5252;"><div class="bar-fill" style="width:{s_charge}%; background:#FF5252;"></div></div><span class="percent-text" style="color:#FF5252;">76%</span></div>
     </div>
     ''', unsafe_allow_html=True)
 
